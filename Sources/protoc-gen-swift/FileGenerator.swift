@@ -146,8 +146,9 @@ class FileGenerator {
             e.generateMainEnum(printer: &p)
         }
 
+        let customExtensions = ["TestProtocol"]
         for m in messages {
-            m.generateMainStruct(printer: &p, parent: nil, errorString: &errorString)
+            m.generateMainStruct(printer: &p, parent: nil, customExtensions: customExtensions, errorString: &errorString)
         }
 
         if !extensionSet.isEmpty {
