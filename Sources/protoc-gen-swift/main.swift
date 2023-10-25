@@ -235,6 +235,22 @@ struct GeneratorPlugin {
         Google_Protobuf_Compiler_CodeGeneratorResponse.File(name: fileGenerator.outputFilename,
                                                             content: printer.content))
     }
+
+    // generate interfaces for provided custom extensions
+    options.customExtensions.forEach {
+      switch $0 {
+      case .testProtocol:
+        var printer = CodePrinter(addNewlines: true)
+        TestProtocolGenerator.generateTestProtocol(printer: &printer)
+        responseFiles.append(
+          Google_Protobuf_Compiler_CodeGeneratorResponse.File(
+            name: "\($0.name)",
+            content: printer.content
+          )
+        )
+      }
+    }
+
     return Google_Protobuf_Compiler_CodeGeneratorResponse(files: responseFiles,
                                                           supportedFeatures: [.proto3Optional])
   }

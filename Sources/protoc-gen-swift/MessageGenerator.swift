@@ -90,7 +90,6 @@ class MessageGenerator {
   func generateMainStruct(
     printer p: inout CodePrinter,
     parent: MessageGenerator?,
-    customExtensions: [String],
     errorString: inout String?
   ) {
     // protoc does this validation; this is just here as a safety net because what is
@@ -130,8 +129,8 @@ class MessageGenerator {
 
     // Add custom extensions (for top-level messages only)
     if parent == nil {
-      customExtensions.forEach {
-        conformances.append($0)
+      generatorOptions.customExtensions.forEach {
+        conformances.append($0.name)
       }
     }
 
@@ -164,7 +163,7 @@ class MessageGenerator {
 
       // Nested messages
       for m in messages {
-        m.generateMainStruct(printer: &p, parent: self, customExtensions: [], errorString: &errorString)
+        m.generateMainStruct(printer: &p, parent: self, errorString: &errorString)
       }
 
       // Generate the default initializer. If we don't, Swift seems to sometimes
