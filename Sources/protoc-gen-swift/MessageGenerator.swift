@@ -127,6 +127,13 @@ class MessageGenerator {
     }
     conformances.append(needsUnchecked ? "@unchecked Sendable" : "Sendable")
 
+    // Add custom extensions (for top-level messages only)
+    if parent == nil {
+      generatorOptions.customExtensions.forEach {
+        conformances.append($0.name)
+      }
+    }
+
     p.print(
         "",
         "\(descriptor.protoSourceCommentsWithDeprecation())\(visibility)struct \(swiftRelativeName): \(conformances.joined(separator: ", ")) {")

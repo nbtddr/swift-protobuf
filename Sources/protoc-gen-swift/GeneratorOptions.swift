@@ -48,11 +48,32 @@ class GeneratorOptions {
       }
     }
   }
+  
+  enum CustomExtension {
+    case testProtocol
+    
+    init?(_ value: String) {
+      switch value.lowercased() {
+      case "testprotocol":
+        self = .testProtocol
+      default:
+        return nil
+      }
+    }
+    
+    var name: String {
+      switch self {
+      case .testProtocol:
+        return "TestProtocol"
+      }
+    }
+  }
 
   let outputNaming: OutputNaming
   let protoToModuleMappings: ProtoFileToModuleMappings
   let visibility: Visibility
   let implementationOnlyImports: Bool
+  let customExtensions: [CustomExtension]
 
   /// A string snippet to insert for the visibility
   let visibilitySourceSnippet: String
@@ -63,6 +84,7 @@ class GeneratorOptions {
     var visibility: Visibility = .internal
     var swiftProtobufModuleName: String? = nil
     var implementationOnlyImports: Bool = false
+    var customExtensions: [CustomExtension] = []
 
     for pair in parseParameter(string:parameter) {
       switch pair.key {
@@ -97,6 +119,9 @@ class GeneratorOptions {
         if let value = Bool(pair.value) {
           implementationOnlyImports = value
         }
+      case "Extensions":
+        let values = pair.value.components(separatedBy: ",")
+        customExtensions = values.compactMap { CustomExtension($0) }
       default:
         throw GenerationError.unknownParameter(name: pair.key)
       }
@@ -127,5 +152,6 @@ class GeneratorOptions {
     }
 
     self.implementationOnlyImports = implementationOnlyImports
+    self.customExtensions = customExtensions
   }
 }
