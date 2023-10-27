@@ -45,8 +45,8 @@ class MessageGenerator {
 
     visibility = generatorOptions.visibilitySourceSnippet
     isExtensible = !descriptor.extensionRanges.isEmpty
-    swiftRelativeName = namer.relativeName(message: descriptor)
-    swiftFullName = namer.fullName(message: descriptor)
+    swiftRelativeName = namer.relativeName(message: descriptor) + generatorOptions.namePostfix
+    swiftFullName = namer.fullName(message: descriptor) + generatorOptions.namePostfix
 
     let useHeapStorage =
       MessageStorageDecision.shouldUseHeapStorage(descriptor: descriptor)

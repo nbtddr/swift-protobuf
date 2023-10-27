@@ -74,6 +74,7 @@ class GeneratorOptions {
   let visibility: Visibility
   let implementationOnlyImports: Bool
   let customExtensions: [CustomExtension]
+  let namePostfix: String
 
   /// A string snippet to insert for the visibility
   let visibilitySourceSnippet: String
@@ -85,6 +86,7 @@ class GeneratorOptions {
     var swiftProtobufModuleName: String? = nil
     var implementationOnlyImports: Bool = false
     var customExtensions: [CustomExtension] = []
+    var namePostfix: String = ""
 
     for pair in parseParameter(string:parameter) {
       switch pair.key {
@@ -122,6 +124,8 @@ class GeneratorOptions {
       case "Extensions":
         let values = pair.value.components(separatedBy: ",")
         customExtensions = values.compactMap { CustomExtension($0) }
+      case "NamePostfix":
+        namePostfix = pair.value
       default:
         throw GenerationError.unknownParameter(name: pair.key)
       }
@@ -153,5 +157,6 @@ class GeneratorOptions {
 
     self.implementationOnlyImports = implementationOnlyImports
     self.customExtensions = customExtensions
+    self.namePostfix = namePostfix
   }
 }
